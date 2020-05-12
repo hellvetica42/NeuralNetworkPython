@@ -18,7 +18,7 @@ for i in range(1000):
 learningRate = 0.1
 
 N = Network([2,2,1])
-N.StochasticGradientDescent(training_data, 100, 1, 0.3)
+N.StochasticGradientDescent(training_data, 100, 1, 1)
 
 for x in xor:
     print(x)

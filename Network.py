@@ -15,6 +15,8 @@ class Network(object):
         self.shapes = shapes
         self.biases = [np.random.randn(x, 1) for x in shapes[1:]]
         self.weights = [np.random.randn(y, x) for x,y in zip(shapes[:-1], shapes[1:])]
+        # self.biases = [np.full((x, 1), 0.5) for x in shapes[1:]]
+        # self.weights = [np.full((y, x), 0.5) for x,y in zip(shapes[:-1], shapes[1:])]
 
     def feedForward(self, activation):
         #return output of network
@@ -38,7 +40,7 @@ class Network(object):
             for batch in mini_batches:
                 epochCost += self.runBatch(batch, learningRate)
             
-            print("Epoch %i finished with Cost: " % e, epochCost)
+            print("Epoch %i finished with Cost: " % e, epochCost/epochs)
 
 
     def runBatch(self, batch, learningRate):
@@ -65,7 +67,7 @@ class Network(object):
         self.biases = [b - (learningRate/len(batch)) * w_b
                         for b, w_b in zip(self.biases, b_gradient)]
 
-        return batchCost 
+        return batchCost/len(batch) 
         
 
     

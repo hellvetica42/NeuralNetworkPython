@@ -28,10 +28,13 @@ class Network(object):
         return activation
 
 
-    def StochasticGradientDescent(self, trainingData, epochs, batchSize, learningRate):
+    def StochasticGradientDescent(self, trainingData, epochs, batchSize, learningRate, testData=None):
 
 
         n = len(trainingData)
+
+        #keep track of the last cost value
+        cost = 0
 
         for e in range(epochs):
             random.shuffle(trainingData) 
@@ -39,9 +42,33 @@ class Network(object):
             epochCost = 0
             for batch in mini_batches:
                 epochCost += self.runBatch(batch, learningRate)
-            
-            print("Epoch %i finished with Cost: " % e, epochCost/epochs)
+                #print("Batch ended with Cost: ", sum(epochCost))
 
+            if testData != None:
+                cost = self.runBatch(testData, learningRate)
+                print("Epoch %i finished with Cost: " % e, sum(cost))
+                print("Accuracy: ")
+                self.test(testData)
+            else:
+                print("Epoch %i ended with Cost: " % e, epochCost)
+
+            # print("Epoch %i finished with Cost: " % e, epochCost/epochs)
+
+        return cost
+
+    def test(self, test_data):
+        correct = 0
+        num = len(test_data)
+        for t in test_data:
+
+            out = self.feedForward(t[0])
+            max = np.max(out)
+            out = np.array([1 if max == i else 0 for i in out])
+
+            if np.array_equal(out, t[1]):
+                correct+=1
+
+        print("%i / %i" % (correct, num))
 
     def runBatch(self, batch, learningRate):
 
